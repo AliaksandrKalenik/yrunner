@@ -1,7 +1,6 @@
 from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, ListAPIView
-from django.contrib.auth import get_user_model # If used custom user model
-from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
 from rest_framework_jwt.settings import api_settings
 
 from .serializers import RegisterUserSerializer, UserSerializer
@@ -34,3 +33,10 @@ class UserView(ListAPIView):
     ]
     queryset = USER_MODEL.objects.order_by("id")
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = self.queryset
+        if not user.is_superuser:
+            queryset = queryset.filter(id=user.id)
+        return queryset
