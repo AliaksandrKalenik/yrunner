@@ -15,10 +15,27 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.auth import get_user_model, login
+from rest_framework_swagger.views import get_swagger_view
+
+
+USER_MODEL = get_user_model()
+
+
+def schema_view(request):
+    doc_user, _ = USER_MODEL.objects.get_or_create(
+        email='example@paynpark.xyz',
+        is_active=True,
+    )
+    login(request, doc_user)
+    view = get_swagger_view(title='Paynpark API')
+    response = view(request)
+    return response
 
 
 urlpatterns = [
     url(r'admin/', admin.site.urls),
     url(r'^users/', include('user.urls')),
     url(r'^race/', include('race.urls')),
+    url(r'^documentation/$', schema_view),
 ]
