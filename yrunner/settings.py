@@ -35,11 +35,16 @@ USE_L10N = True
 
 USE_TZ = False
 
+SWAGGER_SETTINGS = {
+    'JSON_EDITOR': True,
+}
+
 ALLOWED_HOSTS = []
 
 
 # Application definition
 INSTALLED_APPS = [
+    'rest_framework_swagger',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -172,16 +177,6 @@ JWT_AUTH = {
 }
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
