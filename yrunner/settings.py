@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dynamic_rest',
+    'image',
     'user',
     'race',
 ]
@@ -64,7 +66,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
+MEDIA_URL = "http://127.0.0.1:8000/media/"
+MEDIA_ROOT = "media"
 AUTH_USER_MODEL = 'user.User'
 
 ROOT_URLCONF = 'yrunner.urls'
