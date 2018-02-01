@@ -25,6 +25,16 @@ SECRET_KEY = '8$dvue34l-%(z@a&@nhtt2=6v9=p=3duyx1(x7z@x@$045t%mt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = False
+
 ALLOWED_HOSTS = []
 
 
@@ -37,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
+    'race',
 ]
 
 MIDDLEWARE = [
