@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'image',
     'user',
     'race',
+    'text_style_transfer',
 ]
 
 MIDDLEWARE = [
