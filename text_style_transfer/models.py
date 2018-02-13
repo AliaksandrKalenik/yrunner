@@ -1,9 +1,9 @@
 import os
 from django.db import models
-from yrunner.settings import BASE_DIR
+from django.conf import settings
 
 
-WEIGHTS_PATH = os.path.join(BASE_DIR, 'templates', 'nt_weights')
+WEIGHTS_PATH = os.path.join(settings.BASE_DIR, 'templates', 'nt_weights')
 
 
 class TrainModelRequest(models.Model):

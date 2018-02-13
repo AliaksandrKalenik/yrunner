@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model, login
 from rest_framework_swagger.views import get_swagger_view
 
-from yrunner.settings import MEDIA_URL, MEDIA_ROOT
+from django.conf import settings
 
 USER_MODEL = get_user_model()
 
@@ -41,4 +41,4 @@ urlpatterns = [
     url(r'^race/', include('race.urls')),
     url(r'^image/', include('image.urls')),
     url(r'^documentation/$', schema_view),
-] + static('/media/', document_root=MEDIA_ROOT)
+] + static('/media/', document_root=settings.MEDIA_ROOT)
