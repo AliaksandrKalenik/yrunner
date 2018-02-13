@@ -205,7 +205,7 @@ CORS_ALLOW_METHODS = (
      'POST',
      'PUT',
 )
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost//'
+BROKER_URL = 'amqp://guest:guest@localhost//'
 CELERY_IGNORE_RESULT = True
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -222,5 +222,3 @@ DATABASES = {
         'PORT': "5432",
     }
 }
-import django_heroku
-django_heroku.settings(locals())
