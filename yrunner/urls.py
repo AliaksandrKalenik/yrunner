@@ -40,5 +40,6 @@ urlpatterns = [
     url(r'^users/', include('user.urls')),
     url(r'^race/', include('race.urls')),
     url(r'^image/', include('image.urls')),
+    url(r'^alesya/', include('alesya.urls')),
     url(r'^documentation/$', schema_view),
 ] + static('/media/', document_root=settings.MEDIA_ROOT)
