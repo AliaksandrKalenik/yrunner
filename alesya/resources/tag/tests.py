@@ -1,7 +1,6 @@
 import json
 from django.test import TestCase
 from django.urls import reverse
-
 from alesya.models import Classification
 
 
@@ -121,3 +120,119 @@ class TagTest(TestCase):
             reverse('tag', kwargs={"pk": object_id})
         )
         self.assertEqual(result.status_code, 204)
+
+    def test_bulk_create(self):
+        classification = Classification.objects.create(
+            name="Location",
+        )
+        result = self.client.post(
+            reverse("tag-list"),
+            data=json.dumps([
+                {
+                    'name': "Location",
+                    'classification': classification.id
+                },
+                {
+                    'name': "Country"
+                },
+                {
+                    'name': "City",
+                    'classification': None,
+                }
+            ]),
+            content_type='application/json'
+        )
+        for item in result.data:
+            item.pop("id")
+        self.assertSequenceEqual(
+            result.data,
+            [
+                {
+                    'name': "Location",
+                    'classification': classification.id
+                },
+                {
+                    'name': "Country",
+                    'classification': None,
+                },
+                {
+                    'name': "City",
+                    'classification': None,
+                }
+            ]
+        )
+
+    def test_bulk_update(self):
+        classification = Classification.objects.create(
+            name="Location",
+        )
+        result = self.client.post(
+            reverse("tag-list"),
+            data=json.dumps([
+                {
+                    'name': "Location",
+                    'classification': classification.id
+                },
+                {
+                    'name': "Country"
+                },
+                {
+                    'name': "City",
+                    'classification': None,
+                }
+            ]),
+            content_type='application/json'
+        )
+        update_data = []
+        for item in result.data:
+            item["name"] += " updated"
+            if item["classification"]:
+                item["classification"] = None
+            else:
+                item["classification"] = classification.id
+            update_data.append(item)
+
+        result = self.client.patch(
+            reverse("tag-list"),
+            data=json.dumps(update_data),
+            content_type='application/json'
+        )
+        self.assertSequenceEqual(
+            result.data,
+            update_data,
+        )
+
+    def test_bulk_delete(self):
+        classification = Classification.objects.create(
+            name="Location",
+        )
+        result = self.client.post(
+            reverse("tag-list"),
+            data=json.dumps([
+                {
+                    'name': "Location",
+                    'classification': classification.id
+                },
+                {
+                    'name': "Country"
+                },
+                {
+                    'name': "City",
+                    'classification': None,
+                }
+            ]),
+            content_type='application/json'
+        )
+        delete_ids = []
+        for item in result.data:
+            delete_ids.append(str(item["id"]))
+        url = reverse("tag-list") + "?id__in={}".format(",".join(delete_ids))
+
+        result = self.client.delete(
+            url,
+        )
+        self.assertEqual(result.status_code, 204)
+        result = self.client.get(
+            reverse("tag-list"),
+        )
+        self.assertEqual(result.data.get("count"), 0)
