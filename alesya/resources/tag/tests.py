@@ -1,34 +1,34 @@
 import json
 from django.test import TestCase
 from django.urls import reverse
-from alesya.models import Classification
+from alesya.models import Entity
 
 
 class TagTest(TestCase):
 
     def test_create(self):
-        classification = Classification.objects.create(
+        entity = Entity.objects.create(
             name="Location",
         )
         result = self.client.post(
             reverse("tag-list"),
             data={
                 'name': "Location",
-                'classification': classification.id
+                'entity': entity.id
             }
         )
         self.assertEqual(result.data['name'], "Location")
-        self.assertEqual(result.data['classification'], classification.id)
+        self.assertEqual(result.data['entity'], entity.id)
 
     def test_update(self):
-        classification = Classification.objects.create(
+        entity = Entity.objects.create(
             name="Location",
         )
         result = self.client.post(
             reverse("tag-list"),
             data={
                 'name': "Location",
-                'classification': classification.id
+                'entity': entity.id
             }
         )
 
@@ -36,22 +36,22 @@ class TagTest(TestCase):
             reverse("tag", kwargs={"pk": result.data['id']}),
             data=json.dumps({
                 'name': "Country",
-                'classification': None
+                'entity': None
             }),
             content_type='application/json'
         )
         self.assertEqual(result.data['name'], "Country")
-        self.assertIsNone(result.data['classification'])
+        self.assertIsNone(result.data['entity'])
 
     def test_list(self):
-        classification = Classification.objects.create(
+        entity = Entity.objects.create(
             name="Location",
         )
         self.client.post(
             reverse("tag-list"),
             data={
                 'name': "Location",
-                'classification': classification.id
+                'entity': entity.id
             }
         )
         self.client.post(
@@ -71,24 +71,24 @@ class TagTest(TestCase):
             [
                 {
                     'name': "Location",
-                    'classification': classification.id
+                    'entity': entity.id
                 },
                 {
                     'name': "Country",
-                    'classification': None
+                    'entity': None
                 }
             ]
         )
 
     def test_read(self):
-        classification = Classification.objects.create(
+        entity = Entity.objects.create(
             name="Location",
         )
         result = self.client.post(
             reverse("tag-list"),
             data={
                 'name': "Location",
-                'classification': classification.id
+                'entity': entity.id
             }
         )
         object_id = result.data['id']
@@ -100,19 +100,19 @@ class TagTest(TestCase):
             {
                 'id': object_id,
                 'name': "Location",
-                'classification': classification.id,
+                'entity': entity.id,
             }
         )
 
     def test_delete(self):
-        classification = Classification.objects.create(
+        entity = Entity.objects.create(
             name="Location",
         )
         result = self.client.post(
             reverse("tag-list"),
             data={
                 'name': "Location",
-                'classification': classification.id
+                'entity': entity.id
             }
         )
         object_id = result.data['id']
@@ -122,7 +122,7 @@ class TagTest(TestCase):
         self.assertEqual(result.status_code, 204)
 
     def test_bulk_create(self):
-        classification = Classification.objects.create(
+        entity = Entity.objects.create(
             name="Location",
         )
         result = self.client.post(
@@ -130,14 +130,14 @@ class TagTest(TestCase):
             data=json.dumps([
                 {
                     'name': "Location",
-                    'classification': classification.id
+                    'entity': entity.id
                 },
                 {
                     'name': "Country"
                 },
                 {
                     'name': "City",
-                    'classification': None,
+                    'entity': None,
                 }
             ]),
             content_type='application/json'
@@ -149,21 +149,21 @@ class TagTest(TestCase):
             [
                 {
                     'name': "Location",
-                    'classification': classification.id
+                    'entity': entity.id
                 },
                 {
                     'name': "Country",
-                    'classification': None,
+                    'entity': None,
                 },
                 {
                     'name': "City",
-                    'classification': None,
+                    'entity': None,
                 }
             ]
         )
 
     def test_bulk_update(self):
-        classification = Classification.objects.create(
+        entity = Entity.objects.create(
             name="Location",
         )
         result = self.client.post(
@@ -171,14 +171,14 @@ class TagTest(TestCase):
             data=json.dumps([
                 {
                     'name': "Location",
-                    'classification': classification.id
+                    'entity': entity.id
                 },
                 {
                     'name': "Country"
                 },
                 {
                     'name': "City",
-                    'classification': None,
+                    'entity': None,
                 }
             ]),
             content_type='application/json'
@@ -186,10 +186,10 @@ class TagTest(TestCase):
         update_data = []
         for item in result.data:
             item["name"] += " updated"
-            if item["classification"]:
-                item["classification"] = None
+            if item["entity"]:
+                item["entity"] = None
             else:
-                item["classification"] = classification.id
+                item["entity"] = entity.id
             update_data.append(item)
 
         result = self.client.patch(
@@ -203,7 +203,7 @@ class TagTest(TestCase):
         )
 
     def test_bulk_delete(self):
-        classification = Classification.objects.create(
+        entity = Entity.objects.create(
             name="Location",
         )
         result = self.client.post(
@@ -211,14 +211,14 @@ class TagTest(TestCase):
             data=json.dumps([
                 {
                     'name': "Location",
-                    'classification': classification.id
+                    'entity': entity.id
                 },
                 {
                     'name': "Country"
                 },
                 {
                     'name': "City",
-                    'classification': None,
+                    'entity': None,
                 }
             ]),
             content_type='application/json'

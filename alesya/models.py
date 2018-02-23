@@ -16,7 +16,7 @@ class Service(models.Model):
         return "{name} | {number}".format(name=self.name, number=self.number)
 
 
-class Classification(models.Model):
+class Entity(models.Model):
 
     name = models.CharField(
         verbose_name="Class name",
@@ -45,8 +45,8 @@ class Tag(models.Model):
         max_length=100,
         unique=True,
     )
-    classification = models.ForeignKey(
-        Classification,
+    entity = models.ForeignKey(
+        Entity,
         null=True,
         blank=True,
         related_name="tags"

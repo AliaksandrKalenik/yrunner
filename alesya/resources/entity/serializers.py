@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer
 
-from alesya.models import Classification
+from alesya.models import Entity
 
 
-class ClassificationSerializer(ModelSerializer):
+class EntitySerializer(ModelSerializer):
 
     class Meta:
-        model = Classification
+        model = Entity
         fields = ("id", "name", "belong_to_class_question", "question", )

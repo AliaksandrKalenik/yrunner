@@ -8,5 +8,5 @@ class TagSerializer(BulkSerializerMixin, ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'classification', )
+        fields = ('id', 'name', 'entity', )
         list_serializer_class = AdaptedBulkListSerializer

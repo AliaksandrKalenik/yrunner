@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from alesya.models import Service, Tag, ServiceTagBinding, Classification
+from alesya.models import Service, Tag, ServiceTagBinding, Entity
 
 
 class TagInline(admin.TabularInline):
@@ -35,8 +35,8 @@ class ServiceAdmin(admin.ModelAdmin):
     inlines = (TagInline,)
 
 
-@admin.register(Classification)
-class ClassificationAdmin(admin.ModelAdmin):
+@admin.register(Entity)
+class EntityAdmin(admin.ModelAdmin):
 
     list_display = ("id", "name", "belong_to_class_question", "question")
 
@@ -44,4 +44,4 @@ class ClassificationAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
 
-    list_display = ("id", "name", "classification", )
+    list_display = ("id", "name", "entity", )

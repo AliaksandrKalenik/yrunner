@@ -3,12 +3,12 @@ from django.test import TestCase
 from django.urls import reverse
 
 
-class ClassificationTest(TestCase):
+class EntityTest(TestCase):
 
     def test_create(self):
-        print(reverse("classification-list"))
+        print(reverse("entity-list"))
         result = self.client.post(
-            reverse("classification-list"),
+            reverse("entity-list"),
             data={
                 'name': "Location",
                 'belong_to_class_question': "Has it have location?",
@@ -21,7 +21,7 @@ class ClassificationTest(TestCase):
 
     def test_update(self):
         result = self.client.post(
-            reverse("classification-list"),
+            reverse("entity-list"),
             data={
                 'name': "Location",
                 'belong_to_class_question': "Has it have location?",
@@ -30,7 +30,7 @@ class ClassificationTest(TestCase):
         )
 
         result = self.client.patch(
-            reverse("classification", kwargs={"pk": result.data['id']}),
+            reverse("entity", kwargs={"pk": result.data['id']}),
             data=json.dumps({
                 'name': "Country",
                 'belong_to_class_question': "Has it have county beloning?",
@@ -44,7 +44,7 @@ class ClassificationTest(TestCase):
 
     def test_list(self):
         self.client.post(
-            reverse("classification-list"),
+            reverse("entity-list"),
             data={
                 'name': "Location",
                 'belong_to_class_question': "Has it have location?",
@@ -52,7 +52,7 @@ class ClassificationTest(TestCase):
             }
         )
         self.client.post(
-            reverse("classification-list"),
+            reverse("entity-list"),
             data={
                 'name': "Country",
                 'belong_to_class_question': "Has it have county beloning?",
@@ -60,7 +60,7 @@ class ClassificationTest(TestCase):
             }
         )
         result = self.client.get(
-            reverse("classification-list")
+            reverse("entity-list")
         )
         self.assertEqual(result.data['count'], 2)
         for item in result.data['results']:
@@ -83,7 +83,7 @@ class ClassificationTest(TestCase):
 
     def test_read(self):
         result = self.client.post(
-            reverse("classification-list"),
+            reverse("entity-list"),
             data={
                 'name': "Location",
                 'belong_to_class_question': "Has it have location?",
@@ -92,7 +92,7 @@ class ClassificationTest(TestCase):
         )
         object_id = result.data['id']
         result = self.client.get(
-            reverse('classification', kwargs={"pk": object_id})
+            reverse('entity', kwargs={"pk": object_id})
         )
         self.assertDictEqual(
             result.data,
@@ -106,7 +106,7 @@ class ClassificationTest(TestCase):
 
     def test_delete(self):
         result = self.client.post(
-            reverse("classification-list"),
+            reverse("entity-list"),
             data={
                 'name': "Location",
                 'belong_to_class_question': "Has it have location?",
@@ -115,6 +115,6 @@ class ClassificationTest(TestCase):
         )
         object_id = result.data['id']
         result = self.client.delete(
-            reverse('classification', kwargs={"pk": object_id})
+            reverse('entity', kwargs={"pk": object_id})
         )
         self.assertEqual(result.status_code, 204)
