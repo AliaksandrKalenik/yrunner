@@ -1,14 +1,14 @@
-from rest_framework.fields import SerializerMethodField
+from rest_framework.fields import ListField, CharField
 from rest_framework.serializers import ModelSerializer
 
 from alesya.models import Service, Tag, ServiceTagBinding
 
 
-class ServiceSerializer(ModelSerializer):
+class TagListField(ListField):
 
-    tags = SerializerMethodField()
+    child = CharField()
 
-    def get_tags(self, obj):
+    def to_representation(self, obj):
         return list(
             Tag.objects.filter(
                 services_binding__service_id=obj.id
@@ -16,6 +16,14 @@ class ServiceSerializer(ModelSerializer):
                 "services_binding__priority_order"
             ).values_list('name', flat=True).all()
         )
+
+    def to_internal_value(self, data):
+        return {}
+
+
+class ServiceSerializer(ModelSerializer):
+
+    tags = TagListField(source='*')
 
     class Meta:
         model = Service
