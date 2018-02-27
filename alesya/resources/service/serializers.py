@@ -27,7 +27,7 @@ class ServiceSerializer(ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ("id", "number", "name", "tags", )
+        fields = ("id", "number", "name", "tags", "project_id", )
 
     def create(self, validated_data):
         result = super(ServiceSerializer, self).create(validated_data)

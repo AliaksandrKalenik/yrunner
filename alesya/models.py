@@ -11,6 +11,11 @@ class Service(models.Model):
         verbose_name="Service name",
         max_length=100,
     )
+    project_id = models.IntegerField(
+        verbose_name="Project number",
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return "{name} | {number}".format(name=self.name, number=self.number)

@@ -48,6 +48,7 @@ class ServiceTest(TestCase):
                 'number': 1,
                 'name': "ByFly Operator",
                 'tags': ["internet", "phone"],
+                'project_id': 1,
             }
         )
         self.client.post(
@@ -71,11 +72,13 @@ class ServiceTest(TestCase):
                     'number': 1,
                     'name': "ByFly Operator",
                     'tags': ["internet", "phone"],
+                    'project_id': 1,
                 },
                 {
                     'number': 2,
                     'name': "Velcom",
                     'tags': ["internet", "phone", "mobile"],
+                    'project_id': None,
                 }
             ]
         )
@@ -100,6 +103,7 @@ class ServiceTest(TestCase):
                 'number': 1,
                 'name': "ByFly Operator",
                 'tags': ["internet", "phone"],
+                'project_id': None,
             }
         )
 
