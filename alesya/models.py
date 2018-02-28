@@ -54,7 +54,8 @@ class Tag(models.Model):
         Entity,
         null=True,
         blank=True,
-        related_name="tags"
+        related_name="tags",
+        on_delete=models.SET_NULL,
     )
 
     def __str__(self):
@@ -80,3 +81,31 @@ class ServiceTagBinding(models.Model):
 
     def __str__(self):
         return self.tag.name
+
+
+class Location(models.Model):
+
+    name = models.CharField(
+        unique=True,
+        max_length=100,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class LocationBinding(models.Model):
+
+    class Meta:
+        unique_together = (('child', 'parent',))
+
+    child = models.ForeignKey(
+        'Location',
+        verbose_name="Child",
+        related_name="parents",
+    )
+    parent = models.ForeignKey(
+        'Location',
+        verbose_name="Parent",
+        related_name="children",
+    )

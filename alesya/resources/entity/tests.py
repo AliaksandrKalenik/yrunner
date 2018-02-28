@@ -6,7 +6,6 @@ from django.urls import reverse
 class EntityTest(TestCase):
 
     def test_create(self):
-        print(reverse("entity-list"))
         result = self.client.post(
             reverse("entity-list"),
             data={

@@ -13,3 +13,7 @@ app = Celery('yrunner')
 # pickle the object when using Windows.
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+app.conf.task_default_queue = 'default'
+app.conf.task_routes = {
+
+}
