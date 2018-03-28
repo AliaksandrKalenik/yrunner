@@ -228,3 +228,11 @@ DATABASES = {
         'PORT': "5432",
     }
 }
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': [
+            {'host': '127.0.0.1', 'port':'9200'}
+        ]
+    },
+}
