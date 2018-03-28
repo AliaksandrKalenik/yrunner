@@ -9,53 +9,54 @@ class EntityTest(TestCase):
         result = self.client.post(
             reverse("entity-list"),
             data={
-                'name': "Location",
-                'belong_to_class_question': "Has it have location?",
-                'question': "Where?",
+                'number': 1,
+                'name': "ByFly Operator",
+                'tags': ["internet", "phone"],
             }
         )
-        self.assertEqual(result.data['name'], "Location")
-        self.assertEqual(result.data['belong_to_class_question'], "Has it have location?")
-        self.assertSequenceEqual(result.data['question'], "Where?")
+        self.assertEqual(result.data['number'], 1)
+        self.assertEqual(result.data['name'], "ByFly Operator")
+        self.assertSequenceEqual(result.data['tags'], ["internet", "phone"])
 
     def test_update(self):
         result = self.client.post(
             reverse("entity-list"),
             data={
-                'name': "Location",
-                'belong_to_class_question': "Has it have location?",
-                'question': "Where?",
+                'number': 1,
+                'name': "ByFly Operator",
+                'tags': ["internet", "phone"],
             }
         )
 
         result = self.client.patch(
             reverse("entity", kwargs={"pk": result.data['id']}),
             data=json.dumps({
-                'name': "Country",
-                'belong_to_class_question': "Has it have county beloning?",
-                'question': "In what country?",
+                'number': 2,
+                'name': "ByFly Operator2",
+                'tags': ["phone", "internet"],
             }),
             content_type='application/json'
         )
-        self.assertEqual(result.data['name'], "Country")
-        self.assertEqual(result.data['belong_to_class_question'], "Has it have county beloning?")
-        self.assertSequenceEqual(result.data['question'], "In what country?")
+        self.assertEqual(result.data['number'], 2)
+        self.assertEqual(result.data['name'], "ByFly Operator2")
+        self.assertSequenceEqual(result.data['tags'], ["phone", "internet"])
 
     def test_list(self):
         self.client.post(
             reverse("entity-list"),
             data={
-                'name': "Location",
-                'belong_to_class_question': "Has it have location?",
-                'question': "Where?",
+                'number': 1,
+                'name': "ByFly Operator",
+                'tags': ["internet", "phone"],
+                'project_id': 1,
             }
         )
         self.client.post(
             reverse("entity-list"),
             data={
-                'name': "Country",
-                'belong_to_class_question': "Has it have county beloning?",
-                'question': "In what country?",
+                'number': 2,
+                'name': "Velcom",
+                'tags': ["internet", "phone", "mobile"],
             }
         )
         result = self.client.get(
@@ -68,14 +69,16 @@ class EntityTest(TestCase):
             result.data['results'],
             [
                 {
-                    'name': "Location",
-                    'belong_to_class_question': "Has it have location?",
-                    'question': "Where?",
+                    'number': 1,
+                    'name': "ByFly Operator",
+                    'tags': ["internet", "phone"],
+                    'project_id': 1,
                 },
                 {
-                    'name': "Country",
-                    'belong_to_class_question': "Has it have county beloning?",
-                    'question': "In what country?",
+                    'number': 2,
+                    'name': "Velcom",
+                    'tags': ["internet", "phone", "mobile"],
+                    'project_id': None,
                 }
             ]
         )
@@ -84,9 +87,9 @@ class EntityTest(TestCase):
         result = self.client.post(
             reverse("entity-list"),
             data={
-                'name': "Location",
-                'belong_to_class_question': "Has it have location?",
-                'question': "Where?",
+                'number': 1,
+                'name': "ByFly Operator",
+                'tags': ["internet", "phone"],
             }
         )
         object_id = result.data['id']
@@ -97,9 +100,10 @@ class EntityTest(TestCase):
             result.data,
             {
                 'id': object_id,
-                'name': "Location",
-                'belong_to_class_question': "Has it have location?",
-                'question': "Where?",
+                'number': 1,
+                'name': "ByFly Operator",
+                'tags': ["internet", "phone"],
+                'project_id': None,
             }
         )
 
@@ -107,9 +111,9 @@ class EntityTest(TestCase):
         result = self.client.post(
             reverse("entity-list"),
             data={
-                'name': "Location",
-                'belong_to_class_question': "Has it have location?",
-                'question': "Where?",
+                'number': 1,
+                'name': "ByFly Operator",
+                'tags': ["internet", "phone"],
             }
         )
         object_id = result.data['id']
@@ -117,3 +121,14 @@ class EntityTest(TestCase):
             reverse('entity', kwargs={"pk": object_id})
         )
         self.assertEqual(result.status_code, 204)
+
+    def test_duplicate_tags(self):
+        result = self.client.post(
+            reverse("entity-list"),
+            data={
+                'number': 1,
+                'name': "ByFly Operator",
+                'tags': ["internet", "phone", "phone"],
+            }
+        )
+        self.assertSequenceEqual(result.data['tags'], ["internet", "phone"])

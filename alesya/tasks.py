@@ -1,12 +1,12 @@
 from collections import defaultdict
 from celery.task import task
-from alesya.models import Tag, Entity, ServiceTagBinding, Location, \
+from alesya.models import Tag, Сlassifier, EntityTagBinding, Location, \
     LocationBinding
 
 
 @task
 def find_and_update_location_tags():
-    location_entity = Entity.objects.get_or_create(
+    location_entity = Сlassifier.objects.get_or_create(
         name="Location"
     )
     Tag.objects.filter(name__startswith='г. ').update(entity_id=location_entity[0].id)
@@ -19,15 +19,15 @@ def find_and_update_location_tags():
 
 @task
 def find_and_create_locations():
-    location_entity = Entity.objects.get_or_create(
+    location_entity = Сlassifier.objects.get_or_create(
         name="Location"
     )
-    tags = ServiceTagBinding.objects.filter(
+    tags = EntityTagBinding.objects.filter(
         tag__entity_id=location_entity[0].id,
     ).order_by(
-        "service_id", "-priority_order"
+        "entity_id", "-priority_order"
     ).values_list(
-        "service_id", "tag__name"
+        "entity_id", "tag__name"
     ).all()
     locations = []
     used_locations = dict(
@@ -36,7 +36,7 @@ def find_and_create_locations():
         ).values_list("name", "id").all()
     )
     used_location_names = set(used_locations.keys())
-    for service_id, tag_name in tags:
+    for entity_id, tag_name in tags:
         if tag_name in used_location_names:
             continue
         location = Location(
@@ -47,11 +47,11 @@ def find_and_create_locations():
     Location.objects.bulk_create(locations)
     location_name_id_map = {location.name: location.id for location in locations}
     location_name_id_map.update(used_locations)
-    service_tags_map = defaultdict(list)
-    for service_id, tag_name in tags:
-        service_tags_map[service_id].append(tag_name)
+    entity_tags_map = defaultdict(list)
+    for entity_id, tag_name in tags:
+        entity_tags_map[entity_id].append(tag_name)
     bindings = []
-    for service_id, tag_list in service_tags_map.items():
+    for entity_id, tag_list in entity_tags_map.items():
         parent_id = None
         for tag_name in tag_list:
             child_id = location_name_id_map[tag_name]

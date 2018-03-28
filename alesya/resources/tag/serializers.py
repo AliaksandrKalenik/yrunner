@@ -1,12 +1,12 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework_bulk.drf3.serializers import BulkSerializerMixin
-from alesya.models import Tag
+from alesya.models import ClassifierTag
 from library_fixes.bulk_serializer import AdaptedBulkListSerializer
 
 
-class TagSerializer(BulkSerializerMixin, ModelSerializer):
+class ClassifierTagSerializer(BulkSerializerMixin, ModelSerializer):
 
     class Meta:
-        model = Tag
-        fields = ('id', 'name', 'entity', )
+        model = ClassifierTag
+        fields = ('id', 'name', 'classifier', )
         list_serializer_class = AdaptedBulkListSerializer

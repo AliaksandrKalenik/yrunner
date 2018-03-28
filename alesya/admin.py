@@ -1,32 +1,38 @@
 from django.contrib import admin
 
-from alesya.models import Service, Tag, ServiceTagBinding, Entity, Location, \
-    LocationBinding
+from alesya.models import Entity, Tag, EntityTagBinding, Сlassifier, Location, \
+    LocationBinding, Company
 from alesya.tasks import find_and_update_location_tags, \
     find_and_create_locations
 
 
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
+    search_fields = ('name', )
+    list_display = ('id', 'name')
+
+
 class TagInline(admin.TabularInline):
-    model = ServiceTagBinding
+    model = EntityTagBinding
 
 
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    search_fields = ('name', 'number', )
+@admin.register(Entity)
+class EntityAdmin(admin.ModelAdmin):
+    search_fields = ('name', 'number', 'company__name')
 
     def tags(self):
         limit = 10
         tags = list(
             Tag.objects.filter(
-                services_binding__service_id=self.id
+                entities_binding__entity_id=self.id
             ).order_by(
-                'services_binding__priority_order'
+                'entities_binding__priority_order'
             ).values_list(
                 "name", flat=True
             ).all()[:limit]
         )
         tags_count = len(Tag.objects.filter(
-            services_binding__service_id=self.id
+            entities_binding__entity_id=self.id
         ))
         if tags_count > limit:
             tags.append("...")
@@ -38,8 +44,8 @@ class ServiceAdmin(admin.ModelAdmin):
     inlines = (TagInline,)
 
 
-@admin.register(Entity)
-class EntityAdmin(admin.ModelAdmin):
+@admin.register(Сlassifier)
+class СlassifierAdmin(admin.ModelAdmin):
 
     list_display = ("id", "name", "belong_to_class_question", "question")
 
@@ -53,17 +59,17 @@ class TagAdmin(admin.ModelAdmin):
             return ""
         if self.entity.name != "Location":
             return ""
-        service_ids = ServiceTagBinding.objects.filter(tag_id=self.id).values_list("service_id", flat=True).all()
-        tags = ServiceTagBinding.objects.filter(
-            service_id__in=service_ids
+        entity_ids = EntityTagBinding.objects.filter(tag_id=self.id).values_list("entity_id", flat=True).all()
+        tags = EntityTagBinding.objects.filter(
+            entity_id__in=entity_ids
         ).order_by(
-            "service_id", "priority_order"
-        ).values_list("service_id", "tag__name").all()
+            "entity_id", "priority_order"
+        ).values_list("entity_id", "tag__name").all()
         from collections import defaultdict
         result = defaultdict(list)
         for tag in tags:
             result[tag[0]].append(tag[1])
-        path_list = [", ".join(tags) for service_id, tags in result.items()]
+        path_list = [", ".join(tags) for entity_id, tags in result.items()]
         path_list = list(dict.fromkeys(path_list))
         result_str = "<br>".join(path_list)
         return result_str
@@ -71,7 +77,7 @@ class TagAdmin(admin.ModelAdmin):
     path.short_description = "Path"
     path.allow_tags = True
 
-    list_display = ("id", "name", "entity", path, )
+    list_display = ("id", "name", path, )
 
     def update_location_tags_action(self, request, queryset):
         find_and_update_location_tags.apply_async(retry=False)
