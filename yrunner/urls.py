@@ -13,32 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from rest_framework_swagger.views import get_swagger_view
 
-from yrunner.settings import MEDIA_URL, MEDIA_ROOT
+from race.resources.race.viewsets import TemplateRaceListViewSet
+
 
 USER_MODEL = get_user_model()
 
 
-def schema_view(request):
-    doc_user, _ = USER_MODEL.objects.get_or_create(
-        email='example@paynpark.xyz',
-        is_active=True,
-    )
-    login(request, doc_user)
-    view = get_swagger_view(title='Paynpark API')
-    response = view(request)
-    return response
+schema_view = get_swagger_view(title='Yrunner API')
 
 
 urlpatterns = [
+    url(r'^$', TemplateRaceListViewSet.as_view()),
     url(r'admin/', admin.site.urls),
     url(r'^users/', include('user.urls')),
     url(r'^race/', include('race.urls')),
     url(r'^image/', include('image.urls')),
     url(r'^documentation/$', schema_view),
-] + static('/media/', document_root=MEDIA_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

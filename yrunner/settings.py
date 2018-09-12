@@ -13,6 +13,8 @@ import datetime
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import yaml
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -39,7 +41,7 @@ SWAGGER_SETTINGS = {
     'JSON_EDITOR': True,
 }
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "0.0.0.0"]
 
 
 # Application definition
@@ -68,7 +70,8 @@ MIDDLEWARE = [
 ]
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
-MEDIA_URL = "http://127.0.0.1:8000/media/"
+
+MEDIA_URL = "/media/"
 MEDIA_ROOT = "media"
 AUTH_USER_MODEL = 'user.User'
 
@@ -77,15 +80,16 @@ ROOT_URLCONF = 'yrunner.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            # os.path.join(BASE_DIR, 'race', 'templates'),
+        ]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -215,3 +219,37 @@ DATABASES = {
         'PORT': "5432",
     }
 }
+
+SETTINGS_FILE_YAML = os.path.join(BASE_DIR, "settings.yml")
+SETTINGS_FILE_PY = os.path.join(BASE_DIR, "settings.py")
+
+try:
+    globals().update(yaml.load(open(SETTINGS_FILE_YAML)))
+except IOError:
+    try:
+        from settings import *
+    except ImportError:
+        print("Setting file ({}, {}) not found".format(SETTINGS_FILE_YAML, SETTINGS_FILE_PY))
+
+
+if "LOGGING" not in globals().keys():
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {'default': {
+            'format': '[%(asctime)s][%(levelname)s] - %(pathname)s - %(message)s',
+        }},
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'default',
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ["console"],
+                'level': 'INFO',
+                'propagate': True,
+            },
+        },
+    }

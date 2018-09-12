@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% load static %}
+{% autoescape off %}
+<html lang="en">
+<head>
+	<title>Races</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'race/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'race/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'race/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'race/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'race/vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'race/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'race/css/main.css' %}">
+<!--===============================================================================================-->
+</head>
+<body>
+	{{result}}
+	<div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100 ver1 m-b-110">
+					<table data-vertable="ver1">
+						<thead>
+							<tr class="row100 head">
+								<th class="column100 column2" data-column="column2">Name</th>
+								<th class="column100 column3" data-column="column3">Date</th>
+								<th class="column100 column4" data-column="column4">Distance</th>
+								<th class="column100 column5" data-column="column5">Time</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for race in races %}
+							<tr class="row100">
+								<td class="column100 column1" data-column="column1">{{race.user}}</td>
+								<td class="column100 column2" data-column="column2">{{race.date}}</td>
+								<td class="column100 column3" data-column="column3">{{race.distance}}</td>
+								<td class="column100 column4" data-column="column4">{{race.time}}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+<!--===============================================================================================-->
+	<script src="{% static 'race/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'race/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'race/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'race/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'race/js/main.js' %}"></script>
+
+</body>
+</html>
+{% endautoescape %}

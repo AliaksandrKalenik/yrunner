@@ -1,0 +1,49 @@
+%TAG !string! tag:yaml.org,2002:python/object/apply:string.
+---
+COMMON:
+  DEBUG: True
+  ENVIRONMENT: "local"
+
+DATABASES:
+  default:
+    ENGINE: 'django.db.backends.postgresql_psycopg2'
+    NAME: 'yrunner'
+    USER: 'dev'
+    PASSWORD: 'dev_password'
+    HOST: 'localhost'
+    PORT: '5432'
+
+LOGGER:
+  disable_existing_loggers: false
+  formatters:
+    default:
+      format: '[%(asctime)s][%(levelname)s] - %(pathname)s - %(message)s'
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: default
+    file:
+      backupCount: 20
+      class: logging.handlers.RotatingFileHandler
+      filename: yrunner.log
+      formatter: default
+      level: INFO
+      maxBytes: 104857600
+      mode: a
+    file_error:
+      backupCount: 20
+      class: logging.handlers.RotatingFileHandler
+      filename: yrunner_error.log
+      formatter: default
+      level: ERROR
+      maxBytes: 104857600
+      mode: a
+  loggers:
+    django:
+      handlers:
+      - file
+      - file_error
+      - console
+      level: INFO
+      propagate: true
+  version: 1
