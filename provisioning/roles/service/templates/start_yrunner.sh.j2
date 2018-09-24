@@ -1,0 +1,10 @@
+#!/bin/bash
+
+systemctl start yrunner.service
+semanage fcontext -at httpd_sys_rw_content_t "{{project_dir}}/uwsgi.sock"
+restorecon -R -v '{{project_dir}}/uwsgi.sock'
+
+for ((a=1; a>0; ))
+do
+sleep 248
+done

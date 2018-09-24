@@ -1,0 +1,13 @@
+---
+- name: Reset all files
+  command: git reset --hard
+  args:
+    chdir: "{{project_dir}}"
+  ignore_errors: yes
+
+
+- name: Download project from git
+  git:
+    repo: '{{repo_url}}'
+    dest: "{{project_dir}}"
+    version: '{{tag}}'

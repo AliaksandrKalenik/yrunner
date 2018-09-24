@@ -1,0 +1,15 @@
+[Unit]
+Description=uWSGI instance to serve Django application
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory={{project_dir}}
+Environment="PATH={{virtualenv_dir}}/bin"
+ExecStart={{virtualenv_dir}}/bin/uwsgi --ini uwsgi.ini
+
+
+
+[Install]
+WantedBy=multi-user.target

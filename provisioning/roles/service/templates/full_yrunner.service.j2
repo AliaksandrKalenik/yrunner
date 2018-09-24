@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve Django application
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/opt/script
+ExecStart=/opt/script/start_yrunner.sh
+ExecStop=/opt/script/stop_yrunner.sh
+
+[Install]
+WantedBy=multi-user.target

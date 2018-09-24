@@ -1,0 +1,13 @@
+---
+- name: create virtual environment directory
+  become: yes
+  file:
+    path: "{{virtualenv_dir}}"
+    state: directory
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740
+
+- name: create venv
+  become: yes
+  shell: sudo /usr/local/bin/virtualenv -p /usr/local/bin/python3.6 {{virtualenv_dir}}

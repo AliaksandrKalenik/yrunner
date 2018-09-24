@@ -1,0 +1,53 @@
+---
+
+- name: create script directory
+  become: yes
+  file:
+    path: "/opt/script"
+    state: directory
+    owner: root
+    group: root
+    mode: 0o700
+
+
+- name: create service
+  become: yes
+  template:
+    src: yrunner.service.j2
+    dest: "/etc/systemd/system/yrunner.service"
+
+- name: add bash start script
+  become: yes
+  template:
+    src: start_yrunner.sh.j2
+    dest: /opt/script/start_yrunner.sh
+    owner: root
+    group: root
+    mode: 0o700
+
+- name: add bash stop script
+  become: yes
+  template:
+    src: stop_yrunner.sh.j2
+    dest: /opt/script/stop_yrunner.sh
+    owner: root
+    group: root
+    mode: 0o700
+
+- name: create service
+  become: yes
+  template:
+    src: full_yrunner.service.j2
+    dest: "/etc/systemd/system/full_yrunner.service"
+
+- name: enable service
+  become: yes
+  service:
+    name: full_yrunner
+    enabled: yes
+
+- name: start service
+  become: yes
+  service:
+    name: full_yrunner
+    state: started

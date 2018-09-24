@@ -1,0 +1,9 @@
+[uwsgi]
+master = true
+processes = 4
+die-on-term = true
+module = {{project_name}}.wsgi:application
+memory-report = true
+socket = {{project_dir}}/uwsgi.sock
+chmod-socket = 666
+vacuum = true

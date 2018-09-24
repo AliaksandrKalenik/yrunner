@@ -1,0 +1,7 @@
+---
+
+- name: restart service
+  become: yes
+  service:
+    name: full_yrunner
+    state: restarted

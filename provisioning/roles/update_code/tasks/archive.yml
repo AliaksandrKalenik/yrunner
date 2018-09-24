@@ -1,0 +1,33 @@
+---
+
+- name: create project directory
+  become: yes
+  file:
+    path: "{{project_dir}}"
+    state: directory
+
+# Install from ZIP file
+
+- name: Copy archive to instance
+  copy:
+    src: "{{source_code_path}}"
+    dest: "{{admin_home_dir}}/{{ source_code_path | basename }}"
+    owner: "{{admin_name}}"
+    group: "{{admin_group}}"
+    mode: 0o744
+
+- name: unzip source code
+  shell: unzip -o {{admin_home_dir}}/{{ source_code_path | basename }}
+
+- name: remove old version from source directory
+  shell: rm -rf /opt/src/{{ source_code_path | basename | splitext | first}}
+
+- name: move files to src dir
+  become: yes
+  shell: mv -f {{admin_home_dir}}/{{ source_code_path | basename | splitext | first}} /opt/src/
+
+- name: copy source code to project dir
+  become: yes
+  shell: cp -R /opt/src/{{ source_code_path | basename | splitext | first}}/* {{project_dir}}
+
+# End of ZIP file installation

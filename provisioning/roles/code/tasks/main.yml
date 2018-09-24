@@ -1,0 +1,27 @@
+---
+- name: create log dir
+  become: yes
+  file:
+    path: "/var/log/{{project_name}}"
+    state: directory
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740
+
+- name: create uwsgi log dir
+  become: yes
+  file:
+    path: "/var/log/uwsgi"
+    state: directory
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740
+
+- name: create uwsgi log file
+  become: yes
+  file:
+    path: "/var/log/uwsgi/{{project_name}}.log"
+    state: touch
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740

@@ -1,0 +1,25 @@
+# Instance settings
+project_name: "yrunner"
+project_dir: "/opt/yrunner"
+virtualenv_dir: "/opt/venv/yrunner"
+
+# Installation from ZIP
+source_code_path: null
+admin_home_dir: "/home/centos"
+# End of installation from ZIP
+
+# Installation from git
+repo_url: "https://github.com/AliaksandrKalenik/yrunner.git"
+tag: 1.0-release
+# End of installation from git
+
+admin_name: centos
+admin_group: centos
+user_name: www-data
+user_group: www-data
+
+database_name: yrunner
+database_host: 127.0.0.1
+database_user: dev
+database_user_pwd: dev_password
+database_port: 5432

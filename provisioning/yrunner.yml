@@ -1,0 +1,11 @@
+- hosts: yrunner
+  become: yes
+
+  roles:
+    - code
+    - venv
+    - update_code
+    - service
+    - services_restart
+    - security
+    - nginx

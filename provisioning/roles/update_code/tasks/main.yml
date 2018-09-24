@@ -1,0 +1,81 @@
+---
+- name: create project directory
+  become: yes
+  file:
+    path: "{{project_dir}}"
+    state: directory
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740
+
+
+- import_tasks: tasks/git.yml
+  when:
+    - tag is defined
+    - repo_url is defined
+
+
+- import_tasks: tasks/archive.yml
+  when:
+    - tag is undefined
+    - repo_url is undefined
+    - source_code_path is defined
+
+
+- name: remove config file
+  become: yes
+  shell: rm -rf {{project_dir}}/settings.py
+
+
+- name: create config settings.py
+  become: yes
+  template:
+    src: settings.py.j2
+    dest: "{{project_dir}}/settings.py"
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740
+
+
+- name: create config uwsgi.ini
+  become: yes
+  template:
+    src: uwsgi.ini.j2
+    dest: "{{project_dir}}/uwsgi.ini"
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740
+
+
+- name: install requirements
+  become: yes
+  shell: "{{virtualenv_dir}}/bin/pip install -Ur {{project_dir}}/requirements.txt"
+
+
+- name: run migration
+  become: yes
+  shell: cd {{project_dir}} && sudo -u www-data {{virtualenv_dir}}/bin/python3.6 manage.py migrate --noinput
+
+- name: run collect static
+  become: yes
+  shell: cd {{project_dir}} && sudo -u www-data {{virtualenv_dir}}/bin/python3.6 manage.py collectstatic --noinput
+
+
+- name: change permission for project folder
+  become: yes
+  file:
+    path: "{{project_dir}}"
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740
+    recurse: yes
+
+
+- name: change permission for virtual environment folder
+  become: yes
+  file:
+    path: "{{virtualenv_dir}}"
+    owner: "{{user_name}}"
+    group: "{{user_group}}"
+    mode: 0o740
+    recurse: yes

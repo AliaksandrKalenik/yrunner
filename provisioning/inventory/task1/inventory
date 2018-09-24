@@ -1,0 +1,2 @@
+[yrunner]
+initialWeb ansible_connection=ssh ansible_ssh_host=168.61.216.91 ansible_ssh_user=centos ansible_ssh_pass=OnlyForMe1990? ansible_become_user=root ansible_become_pass=OnlyForMe1990?

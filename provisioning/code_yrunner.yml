@@ -1,0 +1,6 @@
+- hosts: yrunner
+  become: yes
+
+  roles:
+    - update_code
+    - services_restart

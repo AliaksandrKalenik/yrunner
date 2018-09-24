@@ -1,0 +1,13 @@
+server {
+      listen 8080;
+      server_name localhost;
+       client_max_body_size 75M;
+
+
+      location / {
+         include uwsgi_params;
+         uwsgi_pass unix:{{project_dir}}/uwsgi.sock;
+         uwsgi_read_timeout 18000;
+       }
+
+}

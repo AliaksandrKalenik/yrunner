@@ -1,0 +1,19 @@
+---
+
+- name: create selinux port
+  become: yes
+  seport:
+    ports: 8080
+    proto: tcp
+    setype: http_port_t
+    state: present
+    reload: yes
+
+- name: create firewall rule
+  become: yes
+  firewalld:
+    zone: public
+    permanent: true
+    port: 8080/tcp
+    state: enabled
+    immediate: yes
